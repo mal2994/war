@@ -5,18 +5,21 @@ import Test exposing (..)
 import War exposing (..)
 
 
-dummySuite : Test
-dummySuite =
-    test "elm test is working fine" <|
-        \_ -> Expect.equal 1 1
+testInit : Test
+testInit =
+    describe "Initializing the program." <|
+        [ todo "Dealing the deck should give 2 players 26 cards each."
+        , todo "Game begins with both players at +0"
+        , todo "Game should have 2 players as a tuple."
+        ]
 
 
-testCardDeals : Test
-testCardDeals =
-    describe "Creating a deck." <|
-        [ todo "Create deck."
-        , todo "Shuffle deck."
-        , todo "Deal deck."
+testFirstTurn : Test
+testFirstTurn =
+    describe "Updating model after first turn is done." <|
+        [ todo "One player gets -1, other player gets +1"
+        , todo "Number of cards with each player changes."
+        , todo "Two cards in play get shown."
         ]
 
 
@@ -47,6 +50,7 @@ testCreateDeck =
                         createDeck
                         |> List.length
                     )
+        , todo "Shuffle deck."
         ]
 
 

@@ -9,7 +9,16 @@ import Html.Events exposing (onClick)
 
 -- MAIN
 -- main =
---     Browser.sandbox { init = init, update = update, view = view }
+-- Browser.sandbox { init = init, update = update, view = view }
+
+-- main =
+    -- Html.text "Hello"
+
+
+
+main =
+    view {}
+
 -- MODEL
 
 
