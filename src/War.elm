@@ -10,14 +10,14 @@ import Html.Events exposing (onClick)
 -- MAIN
 -- main =
 -- Browser.sandbox { init = init, update = update, view = view }
-
 -- main =
-    -- Html.text "Hello"
-
+-- Html.text "Hello"
 
 
 main =
     view {}
+
+
 
 -- MODEL
 
@@ -36,10 +36,8 @@ type alias Card =
 
 
 type alias Player =
-    { cardsRemaining : Int
-    , cardPlayed : Card
-    , isTurnWon : Bool
-    , hand : List Card
+    { hand : List Card
+    , score : Int
     }
 
 
@@ -50,16 +48,7 @@ type alias Model =
 
 -- init : Model
 -- init =
---     let
---         dummy : Int
---         dummy =
---             1
---     in
---     { players =
---         [ {}
---         , {}
---         ]
---     }
+--     {}
 -- UPDATE
 
 
@@ -97,3 +86,7 @@ view model =
         , button []
             [ text "GO" ]
         ]
+
+
+
+-- MSG
