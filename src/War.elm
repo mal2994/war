@@ -67,17 +67,26 @@ createDeck =
 init : ( Model, Cmd Msg )
 init =
     -- TODO: we need to put real data in the initial model below
-    ( { players =
-            [ { hand = [ { rank = 1, suit = Hearts } ]
-              , score = 0
-              }
-            , { hand = [ { rank = 1, suit = Hearts } ]
-              , score = 0
-              }
-            ]
-      }
+    ( initialModel
     , Cmd.none
     )
+
+
+initialModel : Model
+initialModel =
+    let
+        deck =
+            createDeck
+    in
+    { players =
+        [ { hand = List.take 26 deck
+          , score = 0
+          }
+        , { hand = List.drop 26 deck
+          , score = 0
+          }
+        ]
+    }
 
 
 
@@ -85,10 +94,17 @@ init =
 
 
 update msg model =
-    model
+    case msg of
+        ClickedGo ->
+            model
+
+        -- TODO
+        GotRandomCard n ->
+            model
 
 
 
+-- TODO
 -- VIEW
 
 
@@ -105,6 +121,6 @@ view model =
 🂠 26 (-1)
 """
             ]
-        , button []
+        , button [ onClick ClickedGo ]
             [ text "GO" ]
         ]

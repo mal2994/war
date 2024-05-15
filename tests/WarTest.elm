@@ -8,7 +8,17 @@ import War exposing (..)
 testInit : Test
 testInit =
     describe "Initializing the program." <|
-        [ todo "Dealing the deck should give 2 players 26 cards each."
+        [ test "Dealing the deck should give 2 players 26 cards each." <|
+            \_ ->
+                case List.head initialModel.players of
+                    Just p ->
+                        Expect.equal (List.length p.hand) 26
+
+                    Nothing ->
+                        Expect.fail "I got no players in my initial model"
+        , test "The cards dealt should have been shuffled." <| -- sort
+            \_ ->
+                Expect.fail "Need to write this test tomorrow..."
         , todo "Game begins with both players at +0"
         , todo "Game should have 2 players as a tuple."
         ]
@@ -52,17 +62,3 @@ testCreateDeck =
                     )
         , todo "Shuffle deck."
         ]
-
-
-
--- createDeck : List Card
--- createDeck =
---     List.concatMap
---         (\rank ->
---             List.map
---                 (\suit ->
---                     { rank = rank, suit = suit }
---                 )
---                 [ Hearts, Diamonds, Clubs, Spades ]
---         )
---         (List.range 1 13)
