@@ -8,14 +8,15 @@ import Html.Events exposing (onClick)
 
 
 -- MAIN
--- main =
--- Browser.sandbox { init = init, update = update, view = view }
--- main =
--- Html.text "Hello"
 
 
 main =
-    view {}
+    Browser.sandbox { init = init, update = update, view = view }
+
+
+type Msg
+    = ClickedGo
+    | GotRandomCard Int
 
 
 
@@ -47,9 +48,6 @@ type alias Model =
 
 
 -- init : Model
--- init =
---     {}
--- UPDATE
 
 
 createDeck : List Card
@@ -64,6 +62,30 @@ createDeck =
         )
         (List.range 1 13)
         |> List.concat
+
+
+init : ( Model, Cmd Msg )
+init =
+    -- TODO: we need to put real data in the initial model below
+    ( { players =
+            [ { hand = [ { rank = 1, suit = Hearts } ]
+              , score = 0
+              }
+            , { hand = [ { rank = 1, suit = Hearts } ]
+              , score = 0
+              }
+            ]
+      }
+    , Cmd.none
+    )
+
+
+
+-- UPDATE
+
+
+update msg model =
+    model
 
 
 
@@ -86,7 +108,3 @@ view model =
         , button []
             [ text "GO" ]
         ]
-
-
-
--- MSG
