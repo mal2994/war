@@ -2,6 +2,7 @@ module WarTest exposing (..)
 
 import Expect exposing (..)
 import Test exposing (..)
+import Tuple exposing (mapBoth)
 import War exposing (..)
 
 
@@ -10,17 +11,16 @@ testInit =
     describe "Initializing the program." <|
         [ test "Dealing the deck should give 2 players 26 cards each." <|
             \_ ->
-                Expect.all
-                    [ Expect.equal
-                        (List.length
-                            (Tuple.first initialModel.players).hand
-                        )
-                    , Expect.equal
-                        (List.length
-                            (Tuple.second initialModel.players).hand
-                        )
-                    ]
-                    26
+                let
+                    playerHandLength : Player -> Int
+                    playerHandLength p =
+                        List.length p.hand
+                in
+                Expect.equal ( 26, 26 ) <|
+                    mapBoth
+                        playerHandLength
+                        playerHandLength
+                        initialModel.players
         , test "The cards dealt should have been shuffled." <|
             -- sort
             \_ ->
