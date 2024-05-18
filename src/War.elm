@@ -43,7 +43,8 @@ type alias Player =
 
 
 type alias Model =
-    { players : List Player }
+    { players : ( Player, Player )
+    }
 
 
 
@@ -79,13 +80,13 @@ initialModel =
             createDeck
     in
     { players =
-        [ { hand = List.take 26 deck
+        ( { hand = List.take 26 deck
           , score = 0
           }
         , { hand = List.drop 26 deck
           , score = 0
           }
-        ]
+        )
     }
 
 

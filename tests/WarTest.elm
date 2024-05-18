@@ -10,13 +10,19 @@ testInit =
     describe "Initializing the program." <|
         [ test "Dealing the deck should give 2 players 26 cards each." <|
             \_ ->
-                case List.head initialModel.players of
-                    Just p ->
-                        Expect.equal (List.length p.hand) 26
-
-                    Nothing ->
-                        Expect.fail "I got no players in my initial model"
-        , test "The cards dealt should have been shuffled." <| -- sort
+                Expect.all
+                    [ Expect.equal
+                        (List.length
+                            (Tuple.first initialModel.players).hand
+                        )
+                    , Expect.equal
+                        (List.length
+                            (Tuple.second initialModel.players).hand
+                        )
+                    ]
+                    26
+        , test "The cards dealt should have been shuffled." <|
+            -- sort
             \_ ->
                 Expect.fail "Need to write this test tomorrow..."
         , todo "Game begins with both players at +0"
