@@ -4,7 +4,8 @@ import Browser
 import Html exposing (button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
-
+import List exposing (sortBy)
+-- import Random.List exposing (..)
 
 
 -- MAIN
@@ -67,7 +68,6 @@ createDeck =
 
 init : ( Model, Cmd Msg )
 init =
-    -- TODO: we need to put real data in the initial model below
     ( initialModel
     , Cmd.none
     )
@@ -99,7 +99,6 @@ update msg model =
         ClickedGo ->
             model
 
-        -- TODO
         GotRandomCard n ->
             model
 
