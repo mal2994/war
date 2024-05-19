@@ -6,6 +6,7 @@ import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Random
 import Random.List
+import Tuple exposing (mapBoth)
 
 
 
@@ -93,15 +94,40 @@ initialCmd =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        ( player1, player2 ) =
+            model.players
+    in
     case msg of
         ClickedGo ->
-            ( model, Cmd.none )
+            let
+                ( c0, c1 ) =
+                    model.players
+                        |> mapBoth .hand .hand
+                        |> mapBoth List.head List.head
+            in
+            case ( c0, c1 ) of
+                ( Nothing, _ ) ->
+                    ( model, Cmd.none )
+
+                ( _, Nothing ) ->
+                    ( model, Cmd.none )
+
+                ( _, _ ) ->
+                    ( { model
+                        | players =
+                            ( { score = 1
+                              , hand = player1.hand
+                              }
+                            , { score = 1
+                              , hand = player1.hand
+                              }
+                            )
+                      }
+                    , Cmd.none
+                    )
 
         GotRandomDeck d ->
-            let
-                ( player1, player2 ) =
-                    model.players
-            in
             ( { model
                 | players =
                     ( { player1 | hand = List.take 26 d }
@@ -110,6 +136,22 @@ update msg model =
               }
             , Cmd.none
             )
+
+
+scoreTurn : ( Card, Card ) -> ( Int, Int )
+scoreTurn cards =
+    let
+        ( r0, r1 ) =
+            cards |> mapBoth .rank .rank
+    in
+    if r0 < r1 then
+        ( 0, 1 )
+
+    else if r0 > r1 then
+        ( 1, 0 )
+
+    else
+        ( 0, 0 )
 
 
 

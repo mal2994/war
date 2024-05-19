@@ -9,8 +9,8 @@ import War exposing (..)
 updatedModel : Model
 updatedModel =
     initialModel
-    |> update (GotRandomDeck createDeck)
-    |> Tuple.first
+        |> update (GotRandomDeck createDeck)
+        |> Tuple.first
 
 
 testInit : Test
@@ -39,10 +39,23 @@ testInit =
 
 testFirstTurn : Test
 testFirstTurn =
+    let
+        ( newModel, _ ) =
+            update ClickedGo updatedModel
+    in
     describe "Updating model after first turn is done." <|
-        [ todo "One player gets -1, other player gets +1"
-        , todo "Number of cards with each player changes."
-        , todo "Two cards in play get shown."
+        [ test "One player gets -1, other player gets +1" <|
+            \_ ->
+                newModel.players
+                    |> mapBoth .score .score
+                    |> Expect.equal ( -1, 1 )
+        , test "Number of cards with each player changes." <|
+            \_ ->
+                newModel.players
+                    |> mapBoth .hand .hand
+                    |> mapBoth List.length List.length
+                    |> Expect.equal ( 25, 27 )
+        , todo "Two new cards in play get shown."
         ]
 
 
@@ -75,3 +88,8 @@ testCreateDeck =
                     )
         , todo "Shuffle deck."
         ]
+
+
+testGameOver : Test
+testGameOver =
+    todo "Go button should not do anything"
