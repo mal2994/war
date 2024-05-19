@@ -4,37 +4,37 @@ import Array exposing (Array)
 import War exposing (Card, Suit(..))
 
 
+heartStrings : Array String
+heartStrings =
+    Array.fromList [ "🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾" ]
+
+
+spadeStrings : Array String
+spadeStrings =
+    Array.fromList [ "🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂬", "🂭", "🂮" ]
+
+
+diamondStrings : Array String
+diamondStrings =
+    Array.fromList [ "🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎" ]
+
+
+clubStrings : Array String
+clubStrings =
+    Array.fromList [ "🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞" ]
+
+
 getCardInUnicode : Card -> Maybe String
 getCardInUnicode card =
     case card.suit of
         Hearts ->
-            let
-                codeStrings =
-                    Array.fromList [ "🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾" ]
-            in
-            Array.get card.rank codeStrings
+            Array.get card.rank heartStrings
 
         Spades ->
-            let
-                codeStrings =
-                    Array.fromList [ "🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂬", "🂭", "🂮" ]
-            in
-            Array.get card.rank codeStrings
+            Array.get card.rank spadeStrings
 
         Diamonds ->
-            let
-                codeStrings =
-                    Array.fromList [ "🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎" ]
-            in
-            Array.get card.rank codeStrings
+            Array.get card.rank diamondStrings
 
         Clubs ->
-            let
-                codeStrings =
-                    Array.fromList [ "🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞" ]
-            in
-            Array.get card.rank codeStrings
-
-
-
--- shorts, watermelon
+            Array.get card.rank clubStrings
