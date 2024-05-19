@@ -4,6 +4,8 @@ import Browser
 import Html exposing (button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import Random
+import Random.List
 
 
 
@@ -17,7 +19,7 @@ main =
 
 type Msg
     = ClickedGo
-    | GotRandomCard Int
+    | GotRandomDeck (List Card)
 
 
 
@@ -68,39 +70,46 @@ createDeck =
 
 init : a -> ( Model, Cmd Msg )
 init _ =
-    ( initialModel
-    , Cmd.none
-    )
+    ( initialModel, initialCmd )
 
 
 initialModel : Model
 initialModel =
-    let
-        deck =
-            createDeck
-    in
     { players =
-        ( { hand = List.take 26 deck
-          , score = 0
-          }
-        , { hand = List.drop 26 deck
-          , score = 0
-          }
+        ( { hand = [], score = 0 }
+        , { hand = [], score = 0 }
         )
     }
+
+
+initialCmd : Cmd Msg
+initialCmd =
+    Random.generate GotRandomDeck (Random.List.shuffle createDeck)
 
 
 
 -- UPDATE
 
 
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ClickedGo ->
             ( model, Cmd.none )
 
-        GotRandomCard n ->
-            ( model, Cmd.none )
+        GotRandomDeck d ->
+            let
+                ( player1, player2 ) =
+                    model.players
+            in
+            ( { model
+                | players =
+                    ( { player1 | hand = List.take 26 d }
+                    , { player2 | hand = List.drop 26 d }
+                    )
+              }
+            , Cmd.none
+            )
 
 
 
