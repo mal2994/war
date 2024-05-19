@@ -7,6 +7,8 @@ import Html.Events exposing (onClick)
 import Random
 import Random.List
 import Tuple exposing (mapBoth)
+import Tuple exposing (first)
+import Tuple exposing (second)
 
 
 
@@ -101,25 +103,25 @@ update msg model =
     case msg of
         ClickedGo ->
             let
-                ( c0, c1 ) =
+                ( card0, card1 ) =
                     model.players
                         |> mapBoth .hand .hand
                         |> mapBoth List.head List.head
             in
-            case ( c0, c1 ) of
+            case ( card0, card1 ) of
                 ( Nothing, _ ) ->
                     ( model, Cmd.none )
 
                 ( _, Nothing ) ->
                     ( model, Cmd.none )
 
-                ( _, _ ) ->
+                ( Just c0, Just c1 ) ->
                     ( { model
                         | players =
-                            ( { score = 1
+                            ( { score = scoreTurn (c0, c1) |> first
                               , hand = player1.hand
                               }
-                            , { score = 1
+                            , { score = scoreTurn (c0, c1) |> second
                               , hand = player1.hand
                               }
                             )
@@ -145,10 +147,10 @@ scoreTurn cards =
             cards |> mapBoth .rank .rank
     in
     if r0 < r1 then
-        ( 0, 1 )
+        ( -1, 1 )
 
     else if r0 > r1 then
-        ( 1, 0 )
+        ( 1, -1 )
 
     else
         ( 0, 0 )
