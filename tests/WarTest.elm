@@ -1,8 +1,6 @@
 module WarTest exposing (..)
 
 import Expect exposing (..)
-import Html.Attributes exposing (scope)
-import List exposing (head, map, range)
 import Test exposing (..)
 import Tuple exposing (first, mapBoth)
 import War exposing (..)

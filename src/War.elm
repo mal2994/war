@@ -4,15 +4,15 @@ import Browser
 import Html exposing (button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
-import List exposing (sortBy)
--- import Random.List exposing (..)
+
 
 
 -- MAIN
 
 
+main : Program () Model Msg
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element { init = init, update = update, view = view, subscriptions = \_ -> Sub.none }
 
 
 type Msg
@@ -66,8 +66,8 @@ createDeck =
         |> List.concat
 
 
-init : ( Model, Cmd Msg )
-init =
+init : a -> ( Model, Cmd Msg )
+init _ =
     ( initialModel
     , Cmd.none
     )
@@ -97,10 +97,10 @@ initialModel =
 update msg model =
     case msg of
         ClickedGo ->
-            model
+            ( model, Cmd.none )
 
         GotRandomCard n ->
-            model
+            ( model, Cmd.none )
 
 
 
