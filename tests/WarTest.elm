@@ -56,6 +56,7 @@ testFirstTurn =
                     |> mapBoth List.length List.length
                     |> Expect.equal ( 25, 27 )
         , todo "Two new cards in play get shown."
+        , todo "Tiebreaker round has score greater than 1."
         ]
 
 

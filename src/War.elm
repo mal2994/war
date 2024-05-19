@@ -6,9 +6,7 @@ import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Random
 import Random.List
-import Tuple exposing (mapBoth)
-import Tuple exposing (first)
-import Tuple exposing (second)
+import Tuple exposing (first, mapBoth, second)
 
 
 
@@ -97,7 +95,7 @@ initialCmd =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        ( player1, player2 ) =
+        ( player0, player1 ) =
             model.players
     in
     case msg of
@@ -118,11 +116,11 @@ update msg model =
                 ( Just c0, Just c1 ) ->
                     ( { model
                         | players =
-                            ( { score = scoreTurn (c0, c1) |> first
-                              , hand = player1.hand
+                            ( { score = scoreTurn ( c0, c1 ) |> first
+                              , hand = (exchangeHand ( c0, c1 ) |> first) player0.hand
                               }
-                            , { score = scoreTurn (c0, c1) |> second
-                              , hand = player1.hand
+                            , { score = scoreTurn ( c0, c1 ) |> second
+                              , hand = (exchangeHand ( c0, c1 ) |> second) player1.hand
                               }
                             )
                       }
@@ -132,8 +130,8 @@ update msg model =
         GotRandomDeck d ->
             ( { model
                 | players =
-                    ( { player1 | hand = List.take 26 d }
-                    , { player2 | hand = List.drop 26 d }
+                    ( { player0 | hand = List.take 26 d }
+                    , { player1 | hand = List.drop 26 d }
                     )
               }
             , Cmd.none
@@ -154,6 +152,22 @@ scoreTurn cards =
 
     else
         ( 0, 0 )
+
+
+exchangeHand : ( Card, Card ) -> ( List Card -> List Card, List Card -> List Card )
+exchangeHand cards =
+    let
+        ( r0, r1 ) =
+            cards |> mapBoth .rank .rank
+    in
+    if r0 < r1 then
+        ( List.drop 1, List.append [ second cards ] )
+
+    else if r0 > r1 then
+        ( List.append [ first cards ], List.drop 1 )
+
+    else
+        ( List.drop 0, List.drop 0 )
 
 
 
