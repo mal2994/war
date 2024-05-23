@@ -4,6 +4,7 @@ import Browser
 import Html exposing (button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import List exposing (foldl, foldr)
 import Maybe exposing (withDefault)
 import Random
 import Random.List
@@ -159,12 +160,17 @@ exchangeHand cards =
 view model =
     div []
         [ pre [ style "font-size" "xx-large" ]
-            [ text <| viewPlayer (first model.players) ++ """
-
-🃛
-
-🂠 26 (-1)
-"""
+            [ text
+                ((first model.players
+                    |> viewPlayerHelper
+                    |> foldr (++) ""
+                 )
+                    ++ "\n\n"
+                    ++ (second model.players
+                            |> viewPlayerHelper
+                            |> foldl (++) ""
+                       )
+                )
             ]
         , button [ onClick ClickedGo ]
             [ text "GO" ]
@@ -179,3 +185,15 @@ viewPlayer p =
         ++ (p.score |> String.fromInt)
         ++ ")\n\n"
         ++ (getCardInUnicode (List.head p.hand) |> withDefault "(Nothing)")
+
+
+viewPlayerHelper : Player -> List String
+viewPlayerHelper p =
+    [ "🂠 "
+        ++ (List.length p.hand |> String.fromInt)
+        ++ " ("
+        ++ (p.score |> String.fromInt)
+        ++ ")\n\n"
+    , getCardInUnicode (List.head p.hand)
+        |> withDefault "(Nothing)"
+    ]
