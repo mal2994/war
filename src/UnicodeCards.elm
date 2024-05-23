@@ -1,7 +1,7 @@
 module UnicodeCards exposing (..)
 
 import Array exposing (Array)
-import War exposing (Card, Suit(..))
+import Types exposing (..)
 
 
 heartStrings : Array String
@@ -24,17 +24,23 @@ clubStrings =
     Array.fromList [ "🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞" ]
 
 
-getCardInUnicode : Card -> Maybe String
+getCardInUnicode : Maybe Card -> Maybe String
 getCardInUnicode card =
-    case card.suit of
-        Hearts ->
-            Array.get card.rank heartStrings
+    -- TODO: Any way to not allow null here?
+    case card of
+        Nothing ->
+            Just "(Nothing)"
 
-        Spades ->
-            Array.get card.rank spadeStrings
+        Just justCard ->
+            case justCard.suit of
+                Hearts ->
+                    Array.get justCard.rank heartStrings
 
-        Diamonds ->
-            Array.get card.rank diamondStrings
+                Spades ->
+                    Array.get justCard.rank spadeStrings
 
-        Clubs ->
-            Array.get card.rank clubStrings
+                Diamonds ->
+                    Array.get justCard.rank diamondStrings
+
+                Clubs ->
+                    Array.get justCard.rank clubStrings

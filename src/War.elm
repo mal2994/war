@@ -4,9 +4,12 @@ import Browser
 import Html exposing (button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
+import Maybe exposing (withDefault)
 import Random
 import Random.List
 import Tuple exposing (first, mapBoth, second)
+import Types exposing (..)
+import UnicodeCards exposing (getCardInUnicode)
 
 
 
@@ -25,34 +28,7 @@ type Msg
 
 
 -- MODEL
-
-
-type Suit
-    = Hearts
-    | Diamonds
-    | Clubs
-    | Spades
-
-
-type alias Card =
-    { rank : Int
-    , suit : Suit
-    }
-
-
-type alias Player =
-    { hand : List Card
-    , score : Int
-    }
-
-
-type alias Model =
-    { players : ( Player, Player )
-    }
-
-
-
--- init : Model
+-- moved some things to `Types.elm` to fix circular dependency of Main/UnicodeCards
 
 
 createDeck : List Card
@@ -76,9 +52,14 @@ init _ =
 
 initialModel : Model
 initialModel =
+    let
+        -- TODO: remove this temp card as it is just for testing mockup
+        temp_card =
+            { rank = 13, suit = Clubs }
+    in
     { players =
-        ( { hand = [], score = 0 }
-        , { hand = [], score = 0 }
+        ( { hand = [ temp_card ], score = 0 }
+        , { hand = [ temp_card ], score = 0 }
         )
     }
 
@@ -178,10 +159,7 @@ exchangeHand cards =
 view model =
     div []
         [ pre [ style "font-size" "xx-large" ]
-            [ text """
-🂠 26 (+1)
-
-🃞 
+            [ text <| viewPlayer (first model.players) ++ """
 
 🃛
 
@@ -191,3 +169,13 @@ view model =
         , button [ onClick ClickedGo ]
             [ text "GO" ]
         ]
+
+
+viewPlayer : Player -> String
+viewPlayer p =
+    "🂠 "
+        ++ (List.length p.hand |> String.fromInt)
+        ++ " ("
+        ++ (p.score |> String.fromInt)
+        ++ ")\n\n"
+        ++ (getCardInUnicode (List.head p.hand) |> withDefault "(Nothing)")
