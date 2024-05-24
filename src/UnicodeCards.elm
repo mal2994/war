@@ -6,30 +6,37 @@ import Types exposing (..)
 
 heartStrings : Array String
 heartStrings =
-    Array.fromList [ "🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾" ]
+    Array.fromList [ "🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂽", "🂾" ]
 
 
 spadeStrings : Array String
 spadeStrings =
-    Array.fromList [ "🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂬", "🂭", "🂮" ]
+    Array.fromList [ "🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂭", "🂮" ]
 
 
 diamondStrings : Array String
 diamondStrings =
-    Array.fromList [ "🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎" ]
+    Array.fromList [ "🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃍", "🃎" ]
 
 
 clubStrings : Array String
 clubStrings =
-    Array.fromList [ "🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞" ]
+    Array.fromList [ "🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃝", "🃞" ]
+
+
+
+-- anyone know what this is?
+-- "🃜",
 
 
 getCardInUnicode : Maybe Card -> Maybe String
 getCardInUnicode card =
+    Maybe.andThen
     -- TODO: Any way to not allow null here?
     case card of
         Nothing ->
-            Just "(Nothing)"
+            -- Just "(Nothing)"
+            Nothing
 
         Just justCard ->
             case justCard.suit of

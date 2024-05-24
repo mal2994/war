@@ -12,7 +12,7 @@ smokeTest =
     describe "Get a unicode symbol given a playing card"
         [ test "King of Spades character" <|
             \_ ->
-                Just { rank = 13, suit = Clubs }
+                Just { rank = 12, suit = Clubs }
                     |> getCardInUnicode
                     |> Maybe.withDefault "(Nothing)"
                     |> Expect.equal "🃞"
