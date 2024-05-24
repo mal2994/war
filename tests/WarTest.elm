@@ -61,14 +61,14 @@ testFirstTurn =
         , test "Viewing the initial model looks like this." <|
             \_ ->
                 viewPlayers updatedModel
-                    |> Expect.equal """
+                    |> Expect.equal """🂠 26 (0)
+
+🂲
+
+🃘
+
 🂠 26 (0)
 
-🃖
-
-🃒
-
-🂠 26 (0)
 """
         ]
 

@@ -158,41 +158,30 @@ exchangeHand cards =
 
 
 view model =
-    let
-        -- welcome back, lets wrap (++) here with "\n"
-        a =
-            1
-    in
     div []
         [ pre [ style "font-size" "xx-large" ]
-            [ text
-                ((first model.players
-                    |> viewPlayerHelper
-                    |> foldr (++) ""
-                 )
-                    ++ "\n\n"
-                    ++ (second model.players
-                            |> viewPlayerHelper
-                            |> foldl (++) ""
-                       )
-                )
-            ]
+            [ text <| viewPlayers model ]
         , button [ onClick ClickedGo ]
             [ text "GO" ]
         ]
 
 
-viewPlayers: Model -> String
-viewPlayers model = ""
-
--- viewPlayer : Player -> String
--- viewPlayer p =
---     "🂠 "
---         ++ (List.length p.hand |> String.fromInt)
---         ++ " ("
---         ++ (p.score |> String.fromInt)
---         ++ ")\n\n"
---         ++ (getCardInUnicode (List.head p.hand) |> withDefault "(Nothing)")
+viewPlayers : Model -> String
+viewPlayers model =
+    let
+        appendWithInnerNewlines : String -> String -> String
+        appendWithInnerNewlines a b =
+            a ++ "\n\n" ++ b
+    in
+    String.append
+        (first model.players
+            |> viewPlayerHelper
+            |> foldr appendWithInnerNewlines ""
+        )
+        (second model.players
+            |> viewPlayerHelper
+            |> foldl appendWithInnerNewlines ""
+        )
 
 
 viewPlayerHelper : Player -> List String
@@ -201,7 +190,8 @@ viewPlayerHelper p =
         ++ (List.length p.hand |> String.fromInt)
         ++ " ("
         ++ (p.score |> String.fromInt)
-        ++ ")\n\n"
-    , getCardInUnicode (List.head p.hand)
+        ++ ")"
+    , List.head p.hand
+        |> getCardInUnicode
         |> withDefault "(Nothing)"
     ]
