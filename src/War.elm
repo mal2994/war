@@ -158,6 +158,11 @@ exchangeHand cards =
 
 
 view model =
+    let
+        -- welcome back, lets wrap (++) here with "\n"
+        a =
+            1
+    in
     div []
         [ pre [ style "font-size" "xx-large" ]
             [ text
@@ -177,14 +182,17 @@ view model =
         ]
 
 
-viewPlayer : Player -> String
-viewPlayer p =
-    "🂠 "
-        ++ (List.length p.hand |> String.fromInt)
-        ++ " ("
-        ++ (p.score |> String.fromInt)
-        ++ ")\n\n"
-        ++ (getCardInUnicode (List.head p.hand) |> withDefault "(Nothing)")
+viewPlayers: Model -> String
+viewPlayers model = ""
+
+-- viewPlayer : Player -> String
+-- viewPlayer p =
+--     "🂠 "
+--         ++ (List.length p.hand |> String.fromInt)
+--         ++ " ("
+--         ++ (p.score |> String.fromInt)
+--         ++ ")\n\n"
+--         ++ (getCardInUnicode (List.head p.hand) |> withDefault "(Nothing)")
 
 
 viewPlayerHelper : Player -> List String

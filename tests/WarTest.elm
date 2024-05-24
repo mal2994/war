@@ -3,6 +3,7 @@ module WarTest exposing (..)
 import Expect exposing (..)
 import Test exposing (..)
 import Tuple exposing (mapBoth)
+import Types exposing (Card, Model, Suit(..))
 import War exposing (..)
 
 
@@ -57,6 +58,18 @@ testFirstTurn =
                     |> Expect.equal ( 25, 27 )
         , todo "Two new cards in play get shown."
         , todo "Tiebreaker round has score greater than 1."
+        , test "Viewing the initial model looks like this." <|
+            \_ ->
+                viewPlayers updatedModel
+                    |> Expect.equal """
+🂠 26 (0)
+
+🃖
+
+🃒
+
+🂠 26 (0)
+"""
         ]
 
 
