@@ -1,6 +1,7 @@
 module UnicodeCards exposing (..)
 
 import Array exposing (Array)
+import Maybe exposing (withDefault)
 import Types exposing (..)
 
 
@@ -31,23 +32,21 @@ clubStrings =
 
 getCardInUnicode : Maybe Card -> Maybe String
 getCardInUnicode card =
-    Maybe.andThen
-    -- TODO: Any way to not allow null here?
-    case card of
-        Nothing ->
-            -- Just "(Nothing)"
-            Nothing
-
-        Just justCard ->
-            case justCard.suit of
+    let
+        cardGetHelper : Card -> Maybe String
+        cardGetHelper myCard =
+            case myCard.suit of
                 Hearts ->
-                    Array.get justCard.rank heartStrings
+                    Array.get myCard.rank heartStrings
 
                 Spades ->
-                    Array.get justCard.rank spadeStrings
+                    Array.get myCard.rank spadeStrings
 
                 Diamonds ->
-                    Array.get justCard.rank diamondStrings
+                    Array.get myCard.rank diamondStrings
 
                 Clubs ->
-                    Array.get justCard.rank clubStrings
+                    Array.get myCard.rank clubStrings
+    in
+    card
+        |> Maybe.andThen cardGetHelper
