@@ -96,13 +96,20 @@ update msg model =
                     ( model, Cmd.none )
 
                 ( Just c0, Just c1 ) ->
+                    let
+                        ( newScore0, newScore1 ) =
+                            scoreTurn ( c0, c1 )
+
+                        ( newHand0, newHand1 ) =
+                            exchangeHand ( c0, c1 )
+                    in
                     ( { model
                         | players =
-                            ( { score = scoreTurn ( c0, c1 ) |> first
-                              , hand = (exchangeHand ( c0, c1 ) |> first) player0.hand
+                            ( { score = newScore0
+                              , hand = newHand0 player0.hand
                               }
-                            , { score = scoreTurn ( c0, c1 ) |> second
-                              , hand = (exchangeHand ( c0, c1 ) |> second) player1.hand
+                            , { score = newScore1
+                              , hand = newHand1 player1.hand
                               }
                             )
                       }
