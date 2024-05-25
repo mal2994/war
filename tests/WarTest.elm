@@ -24,6 +24,35 @@ modelAfterTurnOne =
         |> Tuple.first
 
 
+generateFourTurns : Model -> ( List Model, Int -> Model )
+generateFourTurns modelZero =
+    let
+        takeTurn : Model -> Model
+        takeTurn m =
+            update ClickedGo m |> Tuple.first
+
+        modelOne =
+            takeTurn modelZero
+
+        modelTwo =
+            takeTurn modelOne
+
+        modelThree =
+            takeTurn modelTwo
+
+        modelList : List Model
+        modelList =
+            [ modelZero, modelOne, modelTwo, modelThree ]
+
+        getTurn : Int -> Model
+        getTurn i =
+            Array.fromList modelList
+                |> Array.get i
+                |> withDefault initialModel
+    in
+    ( modelList, getTurn )
+
+
 testInit : Test
 testInit =
     describe "Initializing the program." <|
@@ -67,9 +96,9 @@ testViews =
                 viewPlayers modelAfterCardDeal
                     |> Expect.equal """🂠 26 (0)
 
+ 
 
-
-
+ 
 
 🂠 26 (0)
 
@@ -79,9 +108,9 @@ testViews =
                 viewPlayers modelAfterTurnOne
                     |> Expect.equal """🂠 25 (-1)
 
-🃁
+ 🃁
 
-🂧
+ 🂧
 
 🂠 27 (+1)
 
@@ -126,32 +155,6 @@ testGameOver =
 testTakingTurns : Test
 testTakingTurns =
     let
-        generateFourTurns : Model -> ( List Model, Int -> Model )
-        generateFourTurns modelZero =
-            let
-                takeTurn : Model -> Model
-                takeTurn m =
-                    update ClickedGo m |> Tuple.first
-
-                modelOne =
-                    takeTurn modelZero
-
-                modelTwo =
-                    takeTurn modelOne
-
-                modelThree =
-                    takeTurn modelTwo
-
-                modelList : List Model
-                modelList =
-                    [ modelZero, modelOne, modelTwo, modelThree ]
-
-                getTurn : Int -> Model
-                getTurn i =
-                    listGet i modelList |> withDefault initialModel
-            in
-            ( modelList, getTurn )
-
         listGet : Int -> List a -> Maybe a
         listGet i list =
             Array.fromList list
@@ -179,7 +182,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Clubs
+                                  , topCards = [ Just <| Card 0 Clubs ]
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -188,7 +191,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Clubs
+                                  , topCards = [ Just <| Card 0 Clubs ]
                                   }
                                 )
                             }
@@ -213,7 +216,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Clubs
+                                  , topCards = [ Just <| Card 0 Clubs ]
                                   }
                                 , { hand =
                                         [ Card 1 Clubs
@@ -222,7 +225,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Clubs
+                                  , topCards = [ Just <| Card 0 Clubs ]
                                   }
                                 )
                             }
@@ -235,6 +238,7 @@ testTakingTurns =
                     ]
                     (Just (Card 0 Spades))
         , todo "The player hand rotates once when you have a tie."
+
         -- , test "The player hand rotates once when you have a tie." <|
         --     \_ ->
         --         let
@@ -261,7 +265,7 @@ testTakingTurns =
         --                           }
         --                         )
         --                     }
-        --         in
+        --         is
         --         Expect.all
         --             [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
         --             , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
