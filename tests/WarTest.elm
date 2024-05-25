@@ -1,7 +1,9 @@
 module WarTest exposing (..)
 
+import Array
 import Expect exposing (..)
 import List exposing (map, member)
+import Maybe exposing (withDefault)
 import Test exposing (..)
 import Tuple exposing (mapBoth)
 import Types exposing (Card, Model, Player, Suit(..))
@@ -125,49 +127,83 @@ testGameOver =
 
 testTakingTurns : Test
 testTakingTurns =
+    let
+        takeTurn : Model -> Model
+        takeTurn m =
+            update ClickedGo m |> Tuple.first
+
+        -- generateFourTurns: Model -> List Model
+        -- generateFourTurns model =
+        -- TODO welcome back
+
+        modelZero : Model
+        modelZero =
+            { players =
+                ( { hand =
+                        [ Card 0 Clubs
+                        , Card 0 Diamonds
+                        , Card 0 Hearts
+                        , Card 1 Spades
+                        ]
+                  , score = 0
+                  , topCard = Just <| Card 0 Spades
+                  }
+                , { hand =
+                        [ Card 0 Clubs
+                        , Card 0 Diamonds
+                        , Card 0 Hearts
+                        , Card 0 Spades
+                        ]
+                  , score = 0
+                  , topCard = Just <| Card 0 Spades
+                  }
+                )
+            }
+
+        modelOne =
+            takeTurn modelZero
+
+        modelTwo =
+            takeTurn modelOne
+
+        modelThree =
+            takeTurn modelTwo
+
+        listGet : Int -> List a -> Maybe a
+        listGet i list =
+            Array.fromList list
+                |> Array.get i
+
+        getACardFromPlayerZero : Model -> Int -> Maybe Card
+        getACardFromPlayerZero model i =
+            model.players |> Tuple.first |> .hand |> Array.fromList |> Array.get i
+
+        getACardFromPlayerOne : Model -> Int -> Maybe Card
+        getACardFromPlayerOne model i =
+            model.players |> Tuple.second |> .hand |> Array.fromList |> Array.get i
+    in
     describe "How player hand works when taking a few turns."
-        [ test "The player hand rotates once with every turn." <|
-            \_ -> Expect.equal 1 1
+        [ test "The player hand rotates once when you win." <|
+            \_ ->
+                Expect.all
+                    [ Expect.equal <| getACardFromPlayerZero modelZero 3
+                    , Expect.equal <| getACardFromPlayerZero modelOne 2
+                    , Expect.equal <| getACardFromPlayerZero modelTwo 1
+                    , Expect.equal <| getACardFromPlayerZero modelThree 0
+                    ]
+                    (Just (Card 1 Spades))
+        , test "The player hand rotates once when you lose." <|
+            \_ ->
+                Expect.all
+                    [ Expect.equal <| getACardFromPlayerOne modelZero 3
+                    , Expect.equal <| getACardFromPlayerOne modelOne 2
+                    , Expect.equal <| getACardFromPlayerOne modelTwo 1
+                    -- , Expect.equal <| getACardFromPlayerZero modelThree 0
+                    ]
+                    (Just (Card 0 Spades))
+        , test "Ima keep it real chief, when you lose this shizzle rotates twice." <| \_ -> Expect.fail "o hell no"
         , test "The pot grows with nested tie breakers." <|
             \_ ->
-                let
-                    takeTurn : Model -> Model
-                    takeTurn m =
-                        update ClickedGo m |> Tuple.first
-
-                    modelZero : Model
-                    modelZero =
-                        { players =
-                            ( { hand =
-                                    [ Card 0 Clubs
-                                    , Card 0 Diamonds
-                                    , Card 0 Hearts
-                                    , Card 1 Spades
-                                    ]
-                              , score = 0
-                              , topCard = Just <| Card 0 Spades
-                              }
-                            , { hand =
-                                    [ Card 0 Clubs
-                                    , Card 0 Diamonds
-                                    , Card 0 Hearts
-                                    , Card 0 Spades
-                                    ]
-                              , score = 0
-                              , topCard = Just <| Card 0 Spades
-                              }
-                            )
-                        }
-
-                    modelOne =
-                        takeTurn modelZero
-
-                    modelTwo =
-                        takeTurn modelOne
-
-                    modelThree =
-                        takeTurn modelTwo
-                in
                 map (\p -> (Tuple.first p.players).score) [ modelZero, modelOne, modelTwo, modelThree ]
                     |> Expect.equalLists [ 0, 0, 0, 4 ]
         ]
