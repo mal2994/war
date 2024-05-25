@@ -42,7 +42,7 @@ createDeck =
                 )
                 [ Hearts, Diamonds, Clubs, Spades ]
         )
-        (List.range 1 13)
+        (List.range 0 12)
         |> List.concat
 
 

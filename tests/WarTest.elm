@@ -1,6 +1,7 @@
 module WarTest exposing (..)
 
 import Expect exposing (..)
+import List exposing (member)
 import Test exposing (..)
 import Tuple exposing (mapBoth)
 import Types exposing (Card, Model, Suit(..))
@@ -56,16 +57,16 @@ testFirstTurn =
                     |> mapBoth .hand .hand
                     |> mapBoth List.length List.length
                     |> Expect.equal ( 25, 27 )
-        , todo "Two new cards in play get shown."
+        -- , todo "Two new cards in play get shown."
         , todo "Tiebreaker round has score greater than 1."
         , test "Viewing the initial model looks like this." <|
             \_ ->
                 viewPlayers updatedModel
                     |> Expect.equal """🂠 26 (0)
 
-🂲
+🂱
 
-🃘
+🃗
 
 🂠 26 (0)
 
@@ -80,30 +81,22 @@ testCreateDeck =
             \_ ->
                 List.length createDeck
                     |> Expect.equal 52
-        , test "Deck should contain 1 ace of hearts." <|
-            \() ->
-                Expect.equal 1
-                    (List.filter
-                        (\card ->
-                            card == { suit = Hearts, rank = 1 }
-                        )
-                        createDeck
-                        |> List.length
-                    )
-        , test "Deck should contain 1 king of diamonds." <|
-            \() ->
-                Expect.equal 1
-                    (List.filter
-                        (\card ->
-                            card == { suit = Diamonds, rank = 12 }
-                        )
-                        createDeck
-                        |> List.length
-                    )
-        , todo "Shuffle deck."
+        , test "Ace is 0, King is 12." <|
+            \_ ->
+                let
+                    member_ : Bool -> Card -> List Card -> Expectation
+                    member_ b el d =
+                        member el d |> Expect.equal b
+                in
+                Expect.all
+                    [ Card 0 Hearts |> member_ True
+                    , Card 12 Hearts |> member_ True
+                    , Card 13 Hearts |> member_ False
+                    , Card -1 Hearts |> member_ False
+                    ]
+                    createDeck
+        -- , todo "Shuffle deck."
         ]
-
-
 testGameOver : Test
 testGameOver =
-    todo "Go button should not do anything"
+    todo "Go button should be disabled in GameOver"

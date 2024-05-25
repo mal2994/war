@@ -1,7 +1,6 @@
 module UnicodeCards exposing (..)
 
 import Array exposing (Array)
-import Maybe exposing (withDefault)
 import Types exposing (..)
 
 
