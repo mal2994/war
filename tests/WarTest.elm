@@ -8,10 +8,17 @@ import Types exposing (Card, Model, Suit(..))
 import War exposing (..)
 
 
-updatedModel : Model
-updatedModel =
+modelAfterCardDeal : Model
+modelAfterCardDeal =
     initialModel
         |> update (GotRandomDeck createDeck)
+        |> Tuple.first
+
+
+modelAfterTurnOne : Model
+modelAfterTurnOne =
+    modelAfterCardDeal
+        |> update ClickedGo
         |> Tuple.first
 
 
@@ -20,7 +27,7 @@ testInit =
     describe "Initializing the program." <|
         [ test "Dealing the deck should give 2 players 26 cards each." <|
             \_ ->
-                updatedModel.players
+                modelAfterCardDeal.players
                     |> mapBoth .hand .hand
                     |> mapBoth List.length List.length
                     |> Expect.equal ( 26, 26 )
@@ -43,7 +50,7 @@ testFirstTurn : Test
 testFirstTurn =
     let
         ( newModel, _ ) =
-            update ClickedGo updatedModel
+            update ClickedGo modelAfterCardDeal
     in
     describe "Updating model after first turn is done." <|
         [ test "One player gets -1, other player gets +1" <|
@@ -57,22 +64,32 @@ testFirstTurn =
                     |> mapBoth .hand .hand
                     |> mapBoth List.length List.length
                     |> Expect.equal ( 25, 27 )
-        -- , todo "Two new cards in play get shown."
-        , test "Viewing the initial model looks like this." <|
+        , test "Preformatted text view after card deal." <|
             \_ ->
-                viewPlayers updatedModel
+                viewPlayers modelAfterCardDeal
                     |> Expect.equal """🂠 26 (0)
+
+
+
+
+
+🂠 26 (0)
+
+"""
+        , test "Preformatted text view after turn one." <|
+            \_ ->
+                viewPlayers modelAfterTurnOne
+                    |> Expect.equal """🂠 25 (-1)
 
 🂱
 
 🃗
 
-🂠 26 (0)
+🂠 27 (1)
 
 """
         , todo "Tiebreaker round has score greater than 1."
         , todo "Tiebreaker winner gets all the cards in that round."
-        , todo "Extremely confusing to show the score for last turn plz fix."
         , todo "Both players play a new card every round plz fix."
         ]
 
@@ -98,8 +115,11 @@ testCreateDeck =
                     , Card -1 Hearts |> member_ False
                     ]
                     createDeck
+
         -- , todo "Shuffle deck."
         ]
+
+
 testGameOver : Test
 testGameOver =
     todo "Go button should be disabled in GameOver"

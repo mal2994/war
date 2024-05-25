@@ -53,14 +53,9 @@ init _ =
 
 initialModel : Model
 initialModel =
-    let
-        -- TODO: remove this temp card as it is just for testing mockup
-        temp_card =
-            { rank = 13, suit = Clubs }
-    in
     { players =
-        ( { hand = [ temp_card ], score = 0 }
-        , { hand = [ temp_card ], score = 0 }
+        ( { hand = [], score = 0, topCard = Nothing }
+        , { hand = [], score = 0, topCard = Nothing }
         )
     }
 
@@ -100,16 +95,22 @@ update msg model =
                         ( newScore0, newScore1 ) =
                             scoreTurn ( c0, c1 )
 
-                        ( newHand0, newHand1 ) =
+                        ( exchange0, exchange1 ) =
                             exchangeHand ( c0, c1 )
+
+                        ( newHand0, newHand1 ) =
+                            ( player0.hand, player1.hand )
+                                |> mapBoth exchange0 exchange1
                     in
                     ( { model
                         | players =
                             ( { score = newScore0
-                              , hand = newHand0 player0.hand
+                              , hand = newHand0
+                              , topCard = List.head player0.hand
                               }
                             , { score = newScore1
-                              , hand = newHand1 player1.hand
+                              , hand = newHand1
+                              , topCard = List.head player1.hand
                               }
                             )
                       }
@@ -198,7 +199,7 @@ viewPlayerHelper p =
         ++ " ("
         ++ (p.score |> String.fromInt)
         ++ ")"
-    , List.head p.hand
+    , p.topCard
         |> getCardInUnicode
-        |> withDefault "(Nothing)"
+        |> withDefault ""
     ]
