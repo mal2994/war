@@ -1,8 +1,7 @@
 module WarTest exposing (..)
 
 import Expect exposing (..)
-import List exposing (map, member, take)
-import Maybe exposing (withDefault)
+import List exposing (map, member)
 import Test exposing (..)
 import Tuple exposing (mapBoth)
 import Types exposing (Card, Model, Player, Suit(..))
@@ -47,8 +46,8 @@ testInit =
         ]
 
 
-testFirstTurn : Test
-testFirstTurn =
+testViews : Test
+testViews =
     describe "Updating model after first turn is done." <|
         [ test "One player gets -1, other player gets +1" <|
             \_ ->
@@ -82,7 +81,7 @@ testFirstTurn =
 
 🂧
 
-🂠 27 (1)
+🂠 27 (+1)
 
 """
         , todo "Tiebreaker round has score greater than 1."
@@ -93,8 +92,8 @@ testFirstTurn =
         ]
 
 
-testCreateDeck : Test
-testCreateDeck =
+testDeck : Test
+testDeck =
     describe "Creating a new deck." <|
         [ test "Deck should contain 52 cards." <|
             \_ ->
@@ -124,47 +123,51 @@ testGameOver =
     todo "Go button should be disabled in GameOver"
 
 
-testTieBreaker : Test
-testTieBreaker =
-    test "The pot grows with nested tie breakers." <|
-        \_ ->
-            let
-                takeTurn : Model -> Model
-                takeTurn m =
-                    update ClickedGo m |> Tuple.first
+testTakingTurns : Test
+testTakingTurns =
+    describe "How player hand works when taking a few turns."
+        [ test "The player hand rotates once with every turn." <|
+            \_ -> Expect.equal 1 1
+        , test "The pot grows with nested tie breakers." <|
+            \_ ->
+                let
+                    takeTurn : Model -> Model
+                    takeTurn m =
+                        update ClickedGo m |> Tuple.first
 
-                modelZero : Model
-                modelZero =
-                    { players =
-                        ( { hand =
-                                [ Card 0 Clubs
-                                , Card 0 Diamonds
-                                , Card 0 Hearts
-                                , Card 1 Spades
-                                ]
-                          , score = 0
-                          , topCard = Just <| Card 0 Spades
-                          }
-                        , { hand =
-                                [ Card 0 Clubs
-                                , Card 0 Diamonds
-                                , Card 0 Hearts
-                                , Card 0 Spades
-                                ]
-                          , score = 0
-                          , topCard = Just <| Card 0 Spades
-                          }
-                        )
-                    }
+                    modelZero : Model
+                    modelZero =
+                        { players =
+                            ( { hand =
+                                    [ Card 0 Clubs
+                                    , Card 0 Diamonds
+                                    , Card 0 Hearts
+                                    , Card 1 Spades
+                                    ]
+                              , score = 0
+                              , topCard = Just <| Card 0 Spades
+                              }
+                            , { hand =
+                                    [ Card 0 Clubs
+                                    , Card 0 Diamonds
+                                    , Card 0 Hearts
+                                    , Card 0 Spades
+                                    ]
+                              , score = 0
+                              , topCard = Just <| Card 0 Spades
+                              }
+                            )
+                        }
 
-                modelOne =
-                    takeTurn modelZero
+                    modelOne =
+                        takeTurn modelZero
 
-                modelTwo =
-                    takeTurn modelOne
+                    modelTwo =
+                        takeTurn modelOne
 
-                modelThree =
-                    takeTurn modelTwo
-            in
-            map (\p -> (Tuple.first p.players).score) [ modelZero, modelOne, modelTwo, modelThree ]
-                |> Expect.equalLists [ 0, 0, 0, 4 ]
+                    modelThree =
+                        takeTurn modelTwo
+                in
+                map (\p -> (Tuple.first p.players).score) [ modelZero, modelOne, modelTwo, modelThree ]
+                    |> Expect.equalLists [ 0, 0, 0, 4 ]
+        ]

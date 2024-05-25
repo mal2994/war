@@ -215,10 +215,19 @@ viewPlayers model =
 
 viewPlayerHelper : Player -> List String
 viewPlayerHelper p =
+    let
+        scoreFormatter : Int -> String
+        scoreFormatter n =
+            if n > 0 then
+                "+" ++ String.fromInt n
+
+            else
+                String.fromInt n
+    in
     [ "🂠 "
         ++ (List.length p.hand |> String.fromInt)
         ++ " ("
-        ++ (p.score |> String.fromInt)
+        ++ scoreFormatter p.score
         ++ ")"
     , p.topCard
         |> getCardInUnicode
