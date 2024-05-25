@@ -5,7 +5,7 @@ import Html exposing (a, button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import List exposing (foldl, foldr)
-import Maybe exposing (withDefault)
+import Maybe exposing (Maybe, withDefault)
 import Random
 import Random.List
 import Tuple exposing (first, mapBoth, second)
@@ -54,8 +54,8 @@ init _ =
 initialModel : Model
 initialModel =
     { players =
-        ( { hand = [], score = 0, topCard = Nothing }
-        , { hand = [], score = 0, topCard = Nothing }
+        ( { hand = [], score = 0, topCards = [ Nothing ] }
+        , { hand = [], score = 0, topCards = [ Nothing ] }
         )
     }
 
@@ -92,6 +92,7 @@ update msg model =
 
                 ( Just c0, Just c1 ) ->
                     let
+                        -- TODO: Check old model for tie
                         ( exchange0, exchange1 ) =
                             exchangeHand ( c0, c1 )
 
@@ -106,11 +107,11 @@ update msg model =
                         | players =
                             ( { score = newScore0
                               , hand = newHand0
-                              , topCard = List.head newHand0
+                              , topCards = [ List.head newHand0 ]
                               }
                             , { score = newScore1
                               , hand = newHand1
-                              , topCard = List.head newHand1
+                              , topCards = [ List.head newHand1 ]
                               }
                             )
                       }
@@ -156,7 +157,7 @@ exchangeHand cards =
             cards |> mapBoth .rank .rank
     in
     if r0 < r1 then
-        ( List.drop 1, preappendList [ second cards ] << rotateList)
+        ( List.drop 1, preappendList [ second cards ] << rotateList )
 
     else if r0 > r1 then
         ( preappendList [ first cards ] << rotateList, List.drop 1 )
@@ -222,13 +223,17 @@ viewPlayerHelper p =
 
             else
                 String.fromInt n
+
+        topCardFolding : Maybe Card -> String -> String
+        topCardFolding mc acc =
+            getCardInUnicode mc
+                |> withDefault ""
+                |> (++) (" " ++ acc)
     in
     [ "🂠 "
         ++ (List.length p.hand |> String.fromInt)
         ++ " ("
         ++ scoreFormatter p.score
         ++ ")"
-    , p.topCard
-        |> getCardInUnicode
-        |> withDefault ""
+    , List.foldr topCardFolding "" p.topCards
     ]

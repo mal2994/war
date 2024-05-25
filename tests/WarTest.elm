@@ -86,8 +86,6 @@ testViews =
 🂠 27 (+1)
 
 """
-        , todo "Tiebreaker round has score greater than 1."
-        , todo "Tiebreaker winner gets all the cards in that round."
         , test "Both players play a new card every round." <|
             \_ ->
                 Expect.equal [ 2, 3, 1 ] (rotateList [ 1, 2, 3 ])
@@ -236,22 +234,21 @@ testTakingTurns =
                     , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
                     ]
                     (Just (Card 0 Spades))
-
-        -- , test "The pot grows with nested tie breakers." <|
+        , todo "The player hand rotates once when you have a tie."
+        -- , test "The player hand rotates once when you have a tie." <|
         --     \_ ->
         --         let
-        --             testModel : Model
-        --             testModel =
+        --             ( _, getTurn ) =
         --                 generateFourTurns
         --                     { players =
         --                         ( { hand =
         --                                 [ Card 0 Clubs
         --                                 , Card 0 Diamonds
         --                                 , Card 0 Hearts
-        --                                 , Card 1 Spades
+        --                                 , Card 0 Spades
         --                                 ]
         --                           , score = 0
-        --                           , topCard = Just <| Card 0 Spades
+        --                           , topCard = Just <| Card 0 Clubs
         --                           }
         --                         , { hand =
         --                                 [ Card 0 Clubs
@@ -260,20 +257,19 @@ testTakingTurns =
         --                                 , Card 0 Spades
         --                                 ]
         --                           , score = 0
-        --                           , topCard = Just <| Card 0 Spades
+        --                           , topCard = Just <| Card 0 Clubs
         --                           }
         --                         )
         --                     }
         --         in
         --         Expect.all
-        --             [ Expect.equal <| getACardFromPlayerZero (testModel [ 0 ]) 3
-        --             , Expect.equal <| getACardFromPlayerZero (testModel [ 1 ]) 2
-        --             , Expect.equal <| getACardFromPlayerZero (testModel [ 2 ]) 1
-        --             , Expect.equal <| getACardFromPlayerZero (testModel [ 3 ]) 0
+        --             [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
+        --             , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
+        --             -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+        --             -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
         --             ]
-        --             (Just (Card 1 Spades))
-        --             map
-        --             (\p -> (Tuple.first p.players).score)
-        --             [ testModel [ 0 ], testModel [ 1 ], testModel [ 2 ], testModel [ 3 ] ]
-        --             |> Expect.equalLists [ 0, 0, 0, 4 ]
+        --             (Just (Card 0 Spades))
+        , todo "The pot grows with nested tie breakers."
+        , todo "Tiebreaker round has score greater than 1."
+        , todo "Tiebreaker winner gets all the cards in that round."
         ]
