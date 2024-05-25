@@ -1,7 +1,7 @@
 module War exposing (..)
 
 import Browser
-import Html exposing (button, div, pre, text)
+import Html exposing (a, button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import List exposing (foldl, foldr)
@@ -92,25 +92,26 @@ update msg model =
 
                 ( Just c0, Just c1 ) ->
                     let
-                        ( newScore0, newScore1 ) =
-                            scoreTurn ( c0, c1 )
-
                         ( exchange0, exchange1 ) =
                             exchangeHand ( c0, c1 )
 
                         ( newHand0, newHand1 ) =
                             ( player0.hand, player1.hand )
                                 |> mapBoth exchange0 exchange1
+                                |> mapBoth rotateList rotateList
+
+                        ( newScore0, newScore1 ) =
+                            scoreTurn ( List.head newHand0, List.head newHand1 )
                     in
                     ( { model
                         | players =
                             ( { score = newScore0
                               , hand = newHand0
-                              , topCard = List.head player0.hand
+                              , topCard = List.head newHand0
                               }
                             , { score = newScore1
                               , hand = newHand1
-                              , topCard = List.head player1.hand
+                              , topCard = List.head newHand1
                               }
                             )
                       }
@@ -128,20 +129,25 @@ update msg model =
             )
 
 
-scoreTurn : ( Card, Card ) -> ( Int, Int )
+scoreTurn : ( Maybe Card, Maybe Card ) -> ( Int, Int )
 scoreTurn cards =
-    let
-        ( r0, r1 ) =
-            cards |> mapBoth .rank .rank
-    in
-    if r0 < r1 then
-        ( -1, 1 )
+    case cards of
+        ( Just c0, Just c1 ) ->
+            let
+                ( r0, r1 ) =
+                    mapBoth .rank .rank ( c0, c1 )
+            in
+            if r0 < r1 then
+                ( -1, 1 )
 
-    else if r0 > r1 then
-        ( 1, -1 )
+            else if r0 > r1 then
+                ( 1, -1 )
 
-    else
-        ( 0, 0 )
+            else
+                ( 0, 0 )
+
+        ( _, _ ) ->
+            ( 0, 0 )
 
 
 exchangeHand : ( Card, Card ) -> ( List Card -> List Card, List Card -> List Card )
@@ -151,13 +157,28 @@ exchangeHand cards =
             cards |> mapBoth .rank .rank
     in
     if r0 < r1 then
-        ( List.drop 1, List.append [ second cards ] )
+        ( List.drop 1, preappendList [ second cards ] )
 
     else if r0 > r1 then
-        ( List.append [ first cards ], List.drop 1 )
+        ( preappendList [ first cards ], List.drop 1 )
 
     else
         ( List.drop 0, List.drop 0 )
+
+
+rotateList : List a -> List a
+rotateList list =
+    case List.head list of
+        Just el ->
+            List.drop 1 list ++ [ el ]
+
+        Nothing ->
+            list
+
+
+preappendList : List a -> List a -> List a
+preappendList list0 list1 =
+    list1 ++ list0
 
 
 

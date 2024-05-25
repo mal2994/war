@@ -2,6 +2,7 @@ module WarTest exposing (..)
 
 import Expect exposing (..)
 import List exposing (member)
+import Maybe exposing (withDefault)
 import Test exposing (..)
 import Tuple exposing (mapBoth)
 import Types exposing (Card, Model, Suit(..))
@@ -90,7 +91,9 @@ testFirstTurn =
 """
         , todo "Tiebreaker round has score greater than 1."
         , todo "Tiebreaker winner gets all the cards in that round."
-        , todo "Both players play a new card every round plz fix."
+        , test "Both players play a new card every round plz fix." <|
+            \_ ->
+                Expect.equal [ 2, 3, 1 ] (rotateList [ 1, 2, 3 ])
         ]
 
 
