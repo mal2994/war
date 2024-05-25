@@ -79,7 +79,7 @@ testViews =
                 viewPlayers modelAfterTurnOne
                     |> Expect.equal """🂠 25 (-1)
 
-🃑
+🃁
 
 🂧
 
@@ -88,7 +88,7 @@ testViews =
 """
         , todo "Tiebreaker round has score greater than 1."
         , todo "Tiebreaker winner gets all the cards in that round."
-        , test "Both players play a new card every round plz fix." <|
+        , test "Both players play a new card every round." <|
             \_ ->
                 Expect.equal [ 2, 3, 1 ] (rotateList [ 1, 2, 3 ])
         ]
@@ -202,7 +202,6 @@ testTakingTurns =
                     , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
                     ]
                     (Just (Card 1 Spades))
-
         , test "The player hand rotates once when you lose that turn." <|
             \_ ->
                 let
@@ -233,11 +232,10 @@ testTakingTurns =
                 Expect.all
                     [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
                     , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
-                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
-                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
                     ]
                     (Just (Card 0 Spades))
-        , test "Ima keep it real chief, when you lose this shizzle rotates twice." <| \_ -> Expect.fail "o hell no"
 
         -- , test "The pot grows with nested tie breakers." <|
         --     \_ ->

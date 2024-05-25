@@ -98,7 +98,6 @@ update msg model =
                         ( newHand0, newHand1 ) =
                             ( player0.hand, player1.hand )
                                 |> mapBoth exchange0 exchange1
-                                |> mapBoth rotateList rotateList
 
                         ( newScore0, newScore1 ) =
                             scoreTurn ( List.head newHand0, List.head newHand1 )
@@ -157,10 +156,10 @@ exchangeHand cards =
             cards |> mapBoth .rank .rank
     in
     if r0 < r1 then
-        ( List.drop 1, preappendList [ second cards ] )
+        ( List.drop 1, preappendList [ second cards ] << rotateList)
 
     else if r0 > r1 then
-        ( preappendList [ first cards ], List.drop 1 )
+        ( preappendList [ first cards ] << rotateList, List.drop 1 )
 
     else
         ( List.drop 0, List.drop 0 )
