@@ -58,7 +58,6 @@ testFirstTurn =
                     |> mapBoth List.length List.length
                     |> Expect.equal ( 25, 27 )
         -- , todo "Two new cards in play get shown."
-        , todo "Tiebreaker round has score greater than 1."
         , test "Viewing the initial model looks like this." <|
             \_ ->
                 viewPlayers updatedModel
@@ -71,6 +70,10 @@ testFirstTurn =
 🂠 26 (0)
 
 """
+        , todo "Tiebreaker round has score greater than 1."
+        , todo "Tiebreaker winner gets all the cards in that round."
+        , todo "Extremely confusing to show the score for last turn plz fix."
+        , todo "Both players play a new card every round plz fix."
         ]
 
 
