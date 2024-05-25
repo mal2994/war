@@ -128,13 +128,13 @@ testGameOver =
 testTakingTurns : Test
 testTakingTurns =
     let
-        takeTurn : Model -> Model
-        takeTurn m =
-            update ClickedGo m |> Tuple.first
-
-        generateFourTurns : Model -> List Model
+        generateFourTurns : Model -> ( List Model, Int -> Model )
         generateFourTurns modelZero =
             let
+                takeTurn : Model -> Model
+                takeTurn m =
+                    update ClickedGo m |> Tuple.first
+
                 modelOne =
                     takeTurn modelZero
 
@@ -143,8 +143,16 @@ testTakingTurns =
 
                 modelThree =
                     takeTurn modelTwo
+
+                modelList : List Model
+                modelList =
+                    [ modelZero, modelOne, modelTwo, modelThree ]
+
+                getTurn : Int -> Model
+                getTurn i =
+                    listGet i modelList |> withDefault initialModel
             in
-            [ modelZero, modelOne, modelTwo, modelThree ]
+            ( modelList, getTurn )
 
         listGet : Int -> List a -> Maybe a
         listGet i list =
@@ -160,21 +168,20 @@ testTakingTurns =
             model.players |> Tuple.second |> .hand |> listGet i
     in
     describe "How player hand works when taking a few turns."
-        [ test "The player hand rotates once when you win." <|
+        [ test "The player hand rotates once when you win that turn." <|
             \_ ->
                 let
-                    testModel : List Model
-                    testModel =
+                    ( _, getTurn ) =
                         generateFourTurns
                             { players =
                                 ( { hand =
-                                        [ Card 0 Clubs
-                                        , Card 0 Diamonds
-                                        , Card 0 Hearts
+                                        [ Card 1 Clubs
+                                        , Card 1 Diamonds
+                                        , Card 1 Hearts
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Spades
+                                  , topCard = Just <| Card 0 Clubs
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -183,24 +190,55 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCard = Just <| Card 0 Spades
+                                  , topCard = Just <| Card 0 Clubs
                                   }
                                 )
                             }
-
-                    listGetTestModelWithDefault : Int -> Model
-                    listGetTestModelWithDefault i =
-                        listGet i testModel |> withDefault initialModel
                 in
                 Expect.all
-                    [ Expect.equal <| getACardFromPlayerZero (listGetTestModelWithDefault 0) 3
-                    , Expect.equal <| getACardFromPlayerZero (listGetTestModelWithDefault 1) 2
-                    , Expect.equal <| getACardFromPlayerZero (listGetTestModelWithDefault 2) 1
-                    , Expect.equal <| getACardFromPlayerZero (listGetTestModelWithDefault 3) 0
+                    [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
                     ]
                     (Just (Card 1 Spades))
-        -- , test "The player hand rotates once when you lose." <|
+
+        , test "The player hand rotates once when you lose that turn." <|
+            \_ ->
+                let
+                    ( _, getTurn ) =
+                        generateFourTurns
+                            { players =
+                                ( { hand =
+                                        [ Card 0 Clubs
+                                        , Card 0 Diamonds
+                                        , Card 0 Hearts
+                                        , Card 0 Spades
+                                        ]
+                                  , score = 0
+                                  , topCard = Just <| Card 0 Clubs
+                                  }
+                                , { hand =
+                                        [ Card 1 Clubs
+                                        , Card 1 Diamonds
+                                        , Card 1 Hearts
+                                        , Card 1 Spades
+                                        ]
+                                  , score = 0
+                                  , topCard = Just <| Card 0 Clubs
+                                  }
+                                )
+                            }
+                in
+                Expect.all
+                    [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
+                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
+                    ]
+                    (Just (Card 0 Spades))
         , test "Ima keep it real chief, when you lose this shizzle rotates twice." <| \_ -> Expect.fail "o hell no"
+
         -- , test "The pot grows with nested tie breakers." <|
         --     \_ ->
         --         let
