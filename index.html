@@ -5526,7 +5526,7 @@ var $author$project$War$initialModel = {
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$War$init = function (_v0) {
-	return (1 === 1) ? _Utils_Tuple2($author$project$War$initialModel, $author$project$War$initialCmd) : _Utils_Tuple2(
+	return (!1) ? _Utils_Tuple2($author$project$War$initialModel, $author$project$War$initialCmd) : _Utils_Tuple2(
 		{
 			players: _Utils_Tuple2(
 				{
@@ -5535,7 +5535,8 @@ var $author$project$War$init = function (_v0) {
 							A2($author$project$Types$Card, 1, $author$project$Types$Clubs),
 							A2($author$project$Types$Card, 0, $author$project$Types$Diamonds),
 							A2($author$project$Types$Card, 0, $author$project$Types$Hearts),
-							A2($author$project$Types$Card, 1, $author$project$Types$Spades)
+							A2($author$project$Types$Card, 1, $author$project$Types$Spades),
+							A2($author$project$Types$Card, 2, $author$project$Types$Diamonds)
 						]),
 					score: 0,
 					topCards: _List_Nil
@@ -5546,7 +5547,8 @@ var $author$project$War$init = function (_v0) {
 							A2($author$project$Types$Card, 0, $author$project$Types$Clubs),
 							A2($author$project$Types$Card, 0, $author$project$Types$Diamonds),
 							A2($author$project$Types$Card, 0, $author$project$Types$Hearts),
-							A2($author$project$Types$Card, 0, $author$project$Types$Spades)
+							A2($author$project$Types$Card, 0, $author$project$Types$Spades),
+							A2($author$project$Types$Card, 1, $author$project$Types$Diamonds)
 						]),
 					score: 0,
 					topCards: _List_Nil
@@ -5773,39 +5775,17 @@ var $author$project$War$update = F2(
 					var c0 = _v3.a.a;
 					var c1 = _v3.b.a;
 					var _v6 = _Utils_eq(
-						function () {
-							var _v7 = $elm$core$List$head(player0.topCards);
-							if (_v7.$ === 'Nothing') {
-								return -1;
-							} else {
-								var headCard = _v7.a;
-								return headCard.rank;
-							}
-						}(),
-						function () {
-							var _v8 = $elm$core$List$head(player1.topCards);
-							if (_v8.$ === 'Nothing') {
-								return -2;
-							} else {
-								var headCard = _v8.a;
-								return headCard.rank;
-							}
-						}()) ? _Utils_Tuple2(
-						_Utils_ap(
-							_List_fromArray(
-								[c0]),
-							player0.topCards),
-						_Utils_ap(
-							_List_fromArray(
-								[c1]),
-							player1.topCards)) : _Utils_Tuple2(
+						$elm$core$List$head(player0.topCards),
+						$elm$core$List$head(player1.topCards)) ? _Utils_Tuple2(
+						A2($elm$core$List$cons, c0, player0.topCards),
+						A2($elm$core$List$cons, c1, player1.topCards)) : _Utils_Tuple2(
 						_List_fromArray(
 							[c0]),
 						_List_fromArray(
 							[c1]));
 					var newTopCards0 = _v6.a;
 					var newTopCards1 = _v6.b;
-					var _v9 = function () {
+					var _v7 = function () {
 						var scoreMultipler = $elm$core$Basics$mul(
 							$elm$core$List$length(newTopCards0));
 						return A3(
@@ -5817,9 +5797,9 @@ var $author$project$War$update = F2(
 									$elm$core$Maybe$Just(c0),
 									$elm$core$Maybe$Just(c1))));
 					}();
-					var newScore0 = _v9.a;
-					var newScore1 = _v9.b;
-					var _v10 = (_Utils_cmp(c0.rank, c1.rank) > 0) ? _Utils_Tuple2(
+					var newScore0 = _v7.a;
+					var newScore1 = _v7.b;
+					var _v8 = (_Utils_cmp(c0.rank, c1.rank) > 0) ? _Utils_Tuple2(
 						_Utils_ap(
 							A2($elm$core$List$drop, 1, player0.hand),
 							_Utils_ap(newTopCards0, newTopCards1)),
@@ -5830,8 +5810,8 @@ var $author$project$War$update = F2(
 							_Utils_ap(newTopCards0, newTopCards1))) : _Utils_Tuple2(
 						A2($elm$core$List$drop, 1, player0.hand),
 						A2($elm$core$List$drop, 1, player1.hand)));
-					var newHand0 = _v10.a;
-					var newHand1 = _v10.b;
+					var newHand0 = _v8.a;
+					var newHand1 = _v8.b;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,

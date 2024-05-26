@@ -48,7 +48,7 @@ createDeck =
 
 init : a -> ( Model, Cmd Msg )
 init _ =
-    if 1 == 1 then
+    if 0 == 1 then
         ( initialModel, initialCmd )
 
     else
@@ -58,6 +58,7 @@ init _ =
                         , Card 0 Diamonds
                         , Card 0 Hearts
                         , Card 1 Spades
+                        , Card 2 Diamonds
                         ]
                   , score = 0
                   , topCards = []
@@ -67,6 +68,7 @@ init _ =
                         , Card 0 Diamonds
                         , Card 0 Hearts
                         , Card 0 Spades
+                        , Card 1 Diamonds
                         ]
                   , score = 0
                   , topCards = []
@@ -119,22 +121,9 @@ update msg model =
                 ( Just c0, Just c1 ) ->
                     let
                         ( newTopCards0, newTopCards1 ) =
-                            -- TODO: null handling could be better
                             if
-                                (case List.head player0.topCards of
-                                    Nothing ->
-                                        -1
-
-                                    Just headCard ->
-                                        headCard.rank
-                                )
-                                    == (case List.head player1.topCards of
-                                            Nothing ->
-                                                -2
-
-                                            Just headCard ->
-                                                headCard.rank
-                                       )
+                                List.head player0.topCards
+                                    == List.head player1.topCards
                             then
                                 ( c0 :: player0.topCards
                                 , c1 :: player1.topCards
