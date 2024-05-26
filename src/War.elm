@@ -48,7 +48,7 @@ createDeck =
 
 init : a -> ( Model, Cmd Msg )
 init _ =
-    if 9 == 1 then
+    if 1 == 1 then
         ( initialModel, initialCmd )
 
     else
@@ -118,15 +118,8 @@ update msg model =
 
                 ( Just c0, Just c1 ) ->
                     let
-                        ( exchange0, exchange1 ) =
-                            exchangeHand ( c0, c1 )
-
-                        ( newHand0, newHand1 ) =
-                            ( player0.hand, player1.hand )
-                                |> mapBoth exchange0 exchange1
-
                         ( newTopCards0, newTopCards1 ) =
-                            if player0.score == player1.score then
+                            if c0.rank == c1.rank then
                                 ( player0.topCards ++ [ c0 ]
                                 , player1.topCards ++ [ c1 ]
                                 )
@@ -141,6 +134,26 @@ update msg model =
                             in
                             scoreTurn ( Just c0, Just c1 )
                                 |> mapBoth scoreMultipler scoreMultipler
+
+                        ( newHand0, newHand1 ) =
+                            if c0.rank == c1.rank then
+                                ( List.drop 1 player0.hand
+                                , List.drop 1 player1.hand
+                                )
+
+                            else if c0.rank > c1.rank then
+                                ( (player0.hand |> List.drop 1)
+                                    ++ newTopCards0
+                                    ++ newTopCards1
+                                , player1.hand |> List.drop 1
+                                )
+
+                            else
+                                ( player0.hand |> List.drop 1
+                                , (player1.hand |> List.drop 1)
+                                    ++ newTopCards0
+                                    ++ newTopCards1
+                                )
                     in
                     ( { model
                         | players =
