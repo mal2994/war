@@ -123,14 +123,6 @@ update msg model =
                                 ( preappendList (noHeadHandler newHand0) []
                                 , preappendList (noHeadHandler newHand1) []
                                 )
-
-                        -- |> mapBoth (Maybe.andThen List.head) (Maybe.andThen List.head)
-                        -- |> mapBoth andThen andThen
-                        -- |> mapBoth List.singleton List.singleton
-                        -- |> mapBoth (andThen List.singleton) (andThen List.singleton)
-                        -- |> mapBoth (andThen Just >> List.singleton) (andThen Just >> List.singleton)
-                        -- |> mapBoth hack hack
-                        -- |> mapBoth (withDefault []) (withDefault [])
                     in
                     ( { model
                         | players =
