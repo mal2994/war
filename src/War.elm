@@ -55,8 +55,8 @@ init _ =
         ( { players =
                 ( { hand =
                         [ Card 1 Clubs
-                        , Card 1 Diamonds
-                        , Card 1 Hearts
+                        , Card 0 Diamonds
+                        , Card 0 Hearts
                         , Card 1 Spades
                         ]
                   , score = 0
@@ -119,7 +119,23 @@ update msg model =
                 ( Just c0, Just c1 ) ->
                     let
                         ( newTopCards0, newTopCards1 ) =
-                            if c0.rank == c1.rank then
+                            -- TODO: null handling could be better
+                            if
+                                (case List.tail player0.topCards of
+                                    Nothing ->
+                                        -1
+
+                                    Just headCards ->
+                                        List.map .rank headCards
+                                )
+                                    == (case List.head player1.topCards of
+                                            Nothing ->
+                                                -1
+
+                                            Just headCard ->
+                                                headCard.rank
+                                       )
+                            then
                                 ( player0.topCards ++ [ c0 ]
                                 , player1.topCards ++ [ c1 ]
                                 )
@@ -136,23 +152,23 @@ update msg model =
                                 |> mapBoth scoreMultipler scoreMultipler
 
                         ( newHand0, newHand1 ) =
-                            if c0.rank == c1.rank then
-                                ( List.drop 1 player0.hand
-                                , List.drop 1 player1.hand
-                                )
-
-                            else if c0.rank > c1.rank then
+                            if c0.rank > c1.rank then
                                 ( (player0.hand |> List.drop 1)
                                     ++ newTopCards0
                                     ++ newTopCards1
                                 , player1.hand |> List.drop 1
                                 )
 
-                            else
+                            else if c0.rank < c1.rank then
                                 ( player0.hand |> List.drop 1
                                 , (player1.hand |> List.drop 1)
                                     ++ newTopCards0
                                     ++ newTopCards1
+                                )
+
+                            else
+                                ( List.drop 1 player0.hand
+                                , List.drop 1 player1.hand
                                 )
                     in
                     ( { model
