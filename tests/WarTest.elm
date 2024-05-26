@@ -115,6 +115,43 @@ testViews =
 🂠 27 (+1)
 
 """
+        , test "Preformatted text view after 3 ties and 1 win." <|
+            \_ ->
+                let
+                    ( _, getTurn ) =
+                        generateFourTurns
+                            { players =
+                                ( { hand =
+                                        [ Card 0 Clubs
+                                        , Card 0 Diamonds
+                                        , Card 0 Hearts
+                                        , Card 1 Spades
+                                        ]
+                                  , score = 0
+                                  , topCards = [ Card 0 Clubs ]
+                                  }
+                                , { hand =
+                                        [ Card 0 Clubs
+                                        , Card 0 Diamonds
+                                        , Card 0 Hearts
+                                        , Card 0 Spades
+                                        ]
+                                  , score = 0
+                                  , topCards = [ Card 0 Clubs ]
+                                  }
+                                )
+                            }
+                in
+                viewPlayers (getTurn 3)
+                    |> Expect.equal """🂠 4 (+4)
+
+ 🂢 🃑 🃁 🂱 
+
+ 🂧 🃑 🃁 🂱
+
+🂠 0 (-4)
+
+"""
         , test "Both players play a new card every round." <|
             \_ ->
                 Expect.equal [ 2, 3, 1 ] (rotateList [ 1, 2, 3 ])
@@ -182,7 +219,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Just <| Card 0 Clubs ]
+                                  , topCards = [ Card 0 Clubs ]
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -191,7 +228,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Just <| Card 0 Clubs ]
+                                  , topCards = [ Card 0 Clubs ]
                                   }
                                 )
                             }
@@ -216,7 +253,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Just <| Card 0 Clubs ]
+                                  , topCards = [ Card 0 Clubs ]
                                   }
                                 , { hand =
                                         [ Card 1 Clubs
@@ -225,7 +262,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Just <| Card 0 Clubs ]
+                                  , topCards = [ Card 0 Clubs ]
                                   }
                                 )
                             }
@@ -238,41 +275,41 @@ testTakingTurns =
                     ]
                     (Just (Card 0 Spades))
         , todo "The player hand rotates once when you have a tie."
+        , test "The player hand rotates once when you have a tie." <|
+            \_ ->
+                let
+                    ( _, getTurn ) =
+                        generateFourTurns
+                            { players =
+                                ( { hand =
+                                        [ Card 0 Clubs
+                                        , Card 0 Diamonds
+                                        , Card 0 Hearts
+                                        , Card 0 Spades
+                                        ]
+                                  , score = 0
+                                  , topCards = [ Card 0 Clubs ]
+                                  }
+                                , { hand =
+                                        [ Card 0 Clubs
+                                        , Card 0 Diamonds
+                                        , Card 0 Hearts
+                                        , Card 0 Spades
+                                        ]
+                                  , score = 0
+                                  , topCards = [ Card 0 Clubs ]
+                                  }
+                                )
+                            }
+                in
+                Expect.all
+                    [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
 
-        -- , test "The player hand rotates once when you have a tie." <|
-        --     \_ ->
-        --         let
-        --             ( _, getTurn ) =
-        --                 generateFourTurns
-        --                     { players =
-        --                         ( { hand =
-        --                                 [ Card 0 Clubs
-        --                                 , Card 0 Diamonds
-        --                                 , Card 0 Hearts
-        --                                 , Card 0 Spades
-        --                                 ]
-        --                           , score = 0
-        --                           , topCard = Just <| Card 0 Clubs
-        --                           }
-        --                         , { hand =
-        --                                 [ Card 0 Clubs
-        --                                 , Card 0 Diamonds
-        --                                 , Card 0 Hearts
-        --                                 , Card 0 Spades
-        --                                 ]
-        --                           , score = 0
-        --                           , topCard = Just <| Card 0 Clubs
-        --                           }
-        --                         )
-        --                     }
-        --         is
-        --         Expect.all
-        --             [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
-        --             , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
-        --             -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
-        --             -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
-        --             ]
-        --             (Just (Card 0 Spades))
+                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
+                    ]
+                    (Just (Card 0 Spades))
         , todo "The pot grows with nested tie breakers."
         , todo "Tiebreaker round has score greater than 1."
         , todo "Tiebreaker winner gets all the cards in that round."

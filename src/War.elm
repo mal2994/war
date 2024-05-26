@@ -5,7 +5,7 @@ import Html exposing (a, button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import List exposing (foldl, foldr)
-import Maybe exposing (Maybe, withDefault)
+import Maybe exposing (Maybe, andThen, withDefault)
 import Random
 import Random.List
 import Tuple exposing (first, mapBoth, second)
@@ -54,8 +54,8 @@ init _ =
 initialModel : Model
 initialModel =
     { players =
-        ( { hand = [], score = 0, topCards = [ Nothing ] }
-        , { hand = [], score = 0, topCards = [ Nothing ] }
+        ( { hand = [], score = 0, topCards = [] }
+        , { hand = [], score = 0, topCards = [] }
         )
     }
 
@@ -92,7 +92,6 @@ update msg model =
 
                 ( Just c0, Just c1 ) ->
                     let
-                        -- TODO: Check old model for tie
                         ( exchange0, exchange1 ) =
                             exchangeHand ( c0, c1 )
 
@@ -102,16 +101,46 @@ update msg model =
 
                         ( newScore0, newScore1 ) =
                             scoreTurn ( List.head newHand0, List.head newHand1 )
+
+                        ( newTopCards0, newTopCards1 ) =
+                            let
+                                noHeadHandler cards =
+                                    case List.head cards of
+                                        Nothing ->
+                                            []
+
+                                        Just x ->
+                                            [ x ]
+                            in
+                            if c0.rank == c1.rank then
+                                model.players
+                                    |> mapBoth .topCards .topCards
+                                    |> mapBoth
+                                        (preappendList (noHeadHandler newHand0))
+                                        (preappendList (noHeadHandler newHand1))
+
+                            else
+                                ( preappendList (noHeadHandler newHand0) []
+                                , preappendList (noHeadHandler newHand1) []
+                                )
+
+                        -- |> mapBoth (Maybe.andThen List.head) (Maybe.andThen List.head)
+                        -- |> mapBoth andThen andThen
+                        -- |> mapBoth List.singleton List.singleton
+                        -- |> mapBoth (andThen List.singleton) (andThen List.singleton)
+                        -- |> mapBoth (andThen Just >> List.singleton) (andThen Just >> List.singleton)
+                        -- |> mapBoth hack hack
+                        -- |> mapBoth (withDefault []) (withDefault [])
                     in
                     ( { model
                         | players =
                             ( { score = newScore0
                               , hand = newHand0
-                              , topCards = [ List.head newHand0 ]
+                              , topCards = newTopCards0
                               }
                             , { score = newScore1
                               , hand = newHand1
-                              , topCards = [ List.head newHand1 ]
+                              , topCards = newTopCards1
                               }
                             )
                       }
@@ -224,11 +253,11 @@ viewPlayerHelper p =
             else
                 String.fromInt n
 
-        topCardFolding : Maybe Card -> String -> String
-        topCardFolding mc acc =
-            getCardInUnicode mc
+        topCardFolding : Card -> String -> String
+        topCardFolding card acc =
+            getCardInUnicode (Just card)
                 |> withDefault ""
-                |> (++) (" " ++ acc)
+                |> (++) (acc ++ " ")
     in
     [ "🂠 "
         ++ (List.length p.hand |> String.fromInt)

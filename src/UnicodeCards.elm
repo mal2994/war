@@ -30,6 +30,7 @@ clubStrings =
 
 
 getCardInUnicode : Maybe Card -> Maybe String
+--TODO: while refactoring topCards viewPlayerHelper I saw we don't need card as MAYBE Card ?
 getCardInUnicode card =
     let
         cardGetHelper : Card -> Maybe String

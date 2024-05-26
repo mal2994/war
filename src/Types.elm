@@ -19,7 +19,7 @@ type alias Card =
 type alias Player =
     { hand : List Card
     , score : Int
-    , topCards : List (Maybe Card)
+    , topCards : List Card
     }
 
 
