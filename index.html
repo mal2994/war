@@ -5526,7 +5526,7 @@ var $author$project$War$initialModel = {
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$War$init = function (_v0) {
-	return (1 === 1) ? _Utils_Tuple2($author$project$War$initialModel, $author$project$War$initialCmd) : _Utils_Tuple2(
+	return (!1) ? _Utils_Tuple2($author$project$War$initialModel, $author$project$War$initialCmd) : _Utils_Tuple2(
 		{
 			players: _Utils_Tuple2(
 				{
@@ -5558,6 +5558,20 @@ var $author$project$War$init = function (_v0) {
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5775,8 +5789,24 @@ var $author$project$War$update = F2(
 					var c0 = _v3.a.a;
 					var c1 = _v3.b.a;
 					var _v6 = _Utils_eq(
-						$elm$core$List$head(player0.topCards),
-						$elm$core$List$head(player1.topCards)) ? _Utils_Tuple2(
+						A2(
+							$elm$core$Maybe$andThen,
+							A2(
+								$elm$core$Basics$composeL,
+								$elm$core$Maybe$Just,
+								function ($) {
+									return $.rank;
+								}),
+							$elm$core$List$head(player0.topCards)),
+						A2(
+							$elm$core$Maybe$andThen,
+							A2(
+								$elm$core$Basics$composeL,
+								$elm$core$Maybe$Just,
+								function ($) {
+									return $.rank;
+								}),
+							$elm$core$List$head(player1.topCards))) ? _Utils_Tuple2(
 						A2($elm$core$List$cons, c0, player0.topCards),
 						A2($elm$core$List$cons, c1, player1.topCards)) : _Utils_Tuple2(
 						_List_fromArray(
@@ -5870,15 +5900,6 @@ var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$core$String$append = _String_append;
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
 var $elm$core$Array$fromListHelp = F3(
 	function (list, nodeList, nodeListSize) {
 		fromListHelp:

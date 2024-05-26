@@ -5,7 +5,7 @@ import Html exposing (a, button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import List exposing (foldl, foldr)
-import Maybe exposing (Maybe, withDefault)
+import Maybe exposing (Maybe, andThen, withDefault)
 import Random
 import Random.List
 import Tuple exposing (first, mapBoth, second)
@@ -13,6 +13,7 @@ import Types exposing (..)
 import UnicodeCards exposing (getCardInUnicode)
 
 
+--test
 
 -- MAIN
 
@@ -122,8 +123,8 @@ update msg model =
                     let
                         ( newTopCards0, newTopCards1 ) =
                             if
-                                List.head player0.topCards
-                                    == List.head player1.topCards
+                                (List.head player0.topCards |> andThen (Just << .rank))
+                                    == (List.head player1.topCards |> andThen (Just << .rank))
                             then
                                 ( c0 :: player0.topCards
                                 , c1 :: player1.topCards
