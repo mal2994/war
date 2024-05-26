@@ -120,8 +120,8 @@ update msg model =
                                         (preappendList (noHeadHandler newHand1))
 
                             else
-                                ( preappendList (noHeadHandler newHand0) []
-                                , preappendList (noHeadHandler newHand1) []
+                                ( preappendList (noHeadHandler player0.hand) []
+                                , preappendList (noHeadHandler player1.hand) []
                                 )
                     in
                     ( { model
@@ -184,7 +184,7 @@ exchangeHand cards =
         ( preappendList [ first cards ] << rotateList, List.drop 1 )
 
     else
-        ( List.drop 0, List.drop 0 )
+        ( List.drop 1, List.drop 1 )
 
 
 rotateList : List a -> List a
