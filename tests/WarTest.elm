@@ -128,9 +128,7 @@ testViews =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
-
-                                  --   , topCards = []
+                                  , topCards = []
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -139,9 +137,7 @@ testViews =
                                         , Card 6 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
-
-                                  --   , topCards = []
+                                  , topCards = []
                                   }
                                 )
                             }
@@ -223,7 +219,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -232,7 +228,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 )
                             }
@@ -257,7 +253,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 , { hand =
                                         [ Card 1 Clubs
@@ -266,7 +262,7 @@ testTakingTurns =
                                         , Card 1 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 )
                             }
@@ -292,7 +288,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
@@ -301,7 +297,7 @@ testTakingTurns =
                                         , Card 0 Spades
                                         ]
                                   , score = 0
-                                  , topCards = [ Card 0 Clubs ]
+                                  , topCards = []
                                   }
                                 )
                             }
