@@ -203,10 +203,6 @@ testTakingTurns =
         getACardFromPlayerZero : Model -> Int -> Maybe Card
         getACardFromPlayerZero model i =
             model.players |> Tuple.first |> .hand |> listGet i
-
-        getACardFromPlayerOne : Model -> Int -> Maybe Card
-        getACardFromPlayerOne model i =
-            model.players |> Tuple.second |> .hand |> listGet i
     in
     describe "How player hand works when taking a few turns."
         [ test "The player hand rotates once when you win that turn." <|

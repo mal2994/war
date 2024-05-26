@@ -5,7 +5,7 @@ import Html exposing (a, button, div, pre, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import List exposing (foldl, foldr)
-import Maybe exposing (Maybe, andThen, withDefault)
+import Maybe exposing (Maybe, withDefault)
 import Random
 import Random.List
 import Tuple exposing (first, mapBoth, second)
@@ -136,8 +136,8 @@ update msg model =
                                                 headCard.rank
                                        )
                             then
-                                ( [ c0 ] ++ player0.topCards
-                                , [ c1 ] ++ player1.topCards
+                                ( c0 :: player0.topCards
+                                , c1 :: player1.topCards
                                 )
 
                             else
@@ -250,10 +250,10 @@ preappendList list0 list1 =
 
 
 
--- TODO
 -- VIEW
 
 
+view : Model -> Html.Html Msg
 view model =
     div []
         [ pre [ style "font-size" "xx-large" ]
