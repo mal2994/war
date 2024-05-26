@@ -99,30 +99,45 @@ update msg model =
                             ( player0.hand, player1.hand )
                                 |> mapBoth exchange0 exchange1
 
-                        ( newScore0, newScore1 ) =
-                            scoreTurn ( List.head newHand0, List.head newHand1 )
-
                         ( newTopCards0, newTopCards1 ) =
-                            let
-                                noHeadHandler cards =
-                                    case List.head cards of
-                                        Nothing ->
-                                            []
-
-                                        Just x ->
-                                            [ x ]
-                            in
-                            if c0.rank == c1.rank then
-                                model.players
-                                    |> mapBoth .topCards .topCards
-                                    |> mapBoth
-                                        (preappendList (noHeadHandler newHand0))
-                                        (preappendList (noHeadHandler newHand1))
+                            if player0.score == player1.score then
+                                ( player0.topCards ++ [ c0 ]
+                                , player1.topCards ++ [ c1 ]
+                                )
 
                             else
-                                ( preappendList (noHeadHandler player0.hand) []
-                                , preappendList (noHeadHandler player1.hand) []
-                                )
+                                ( [ c0 ], [ c1 ] )
+
+                        ( newScore0, newScore1 ) =
+                            let
+                                scoreMultipler =
+                                    (*) (List.length newTopCards0)
+                            in
+                            scoreTurn ( Just c0, Just c1 )
+                                |> mapBoth scoreMultipler scoreMultipler
+
+                        -- ( newTopCards0, newTopCards1 ) =
+                        --     let
+                        --         noHeadHandler cards =
+                        --             case List.head cards of
+                        --                 Nothing ->
+                        --                     []
+                        --                 Just x ->
+                        --                     [ x ]
+                        --     in
+                        --     if
+                        --         List.map .rank player0.topCards
+                        --             == List.map .rank player1.topCards
+                        --     then
+                        --         model.players
+                        --             |> mapBoth .topCards .topCards
+                        --             |> mapBoth
+                        --                 (preappendList (noHeadHandler newHand0))
+                        --                 (preappendList (noHeadHandler newHand1))
+                        --     else
+                        --         ( preappendList (noHeadHandler player0.hand) []
+                        --         , preappendList (noHeadHandler player1.hand) []
+                        --         )
                     in
                     ( { model
                         | players =

@@ -96,9 +96,9 @@ testViews =
                 viewPlayers modelAfterCardDeal
                     |> Expect.equal """🂠 26 (0)
 
- 
 
- 
+
+
 
 🂠 26 (0)
 
@@ -108,9 +108,9 @@ testViews =
                 viewPlayers modelAfterTurnOne
                     |> Expect.equal """🂠 25 (-1)
 
- 🃁
+ 🂱
 
- 🂧
+ 🃗
 
 🂠 27 (+1)
 
@@ -129,15 +129,19 @@ testViews =
                                         ]
                                   , score = 0
                                   , topCards = [ Card 0 Clubs ]
+
+                                  --   , topCards = []
                                   }
                                 , { hand =
                                         [ Card 0 Clubs
                                         , Card 0 Diamonds
                                         , Card 0 Hearts
-                                        , Card 0 Spades
+                                        , Card 6 Spades
                                         ]
                                   , score = 0
                                   , topCards = [ Card 0 Clubs ]
+
+                                  --   , topCards = []
                                   }
                                 )
                             }
@@ -145,9 +149,9 @@ testViews =
                 viewPlayers (getTurn 3)
                     |> Expect.equal """🂠 4 (+4)
 
- 🂢 🃑 🃁 🂱 
+ 🂢 🂱 🃁 🃑
 
- 🂧 🃑 🃁 🂱
+ 🂧 🂱 🃁 🃑
 
 🂠 0 (-4)
 
@@ -305,9 +309,8 @@ testTakingTurns =
                 Expect.all
                     [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
                     , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
-
-                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
-                    -- , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
+                    , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
                     ]
                     (Just (Card 0 Spades))
         , todo "The pot grows with nested tie breakers."
