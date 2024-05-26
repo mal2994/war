@@ -48,7 +48,33 @@ createDeck =
 
 init : a -> ( Model, Cmd Msg )
 init _ =
-    ( initialModel, initialCmd )
+    if 9 == 1 then
+        ( initialModel, initialCmd )
+
+    else
+        ( { players =
+                ( { hand =
+                        [ Card 1 Clubs
+                        , Card 1 Diamonds
+                        , Card 1 Hearts
+                        , Card 1 Spades
+                        ]
+                  , score = 0
+                  , topCards = []
+                  }
+                , { hand =
+                        [ Card 0 Clubs
+                        , Card 0 Diamonds
+                        , Card 0 Hearts
+                        , Card 0 Spades
+                        ]
+                  , score = 0
+                  , topCards = []
+                  }
+                )
+          }
+        , Cmd.none
+        )
 
 
 initialModel : Model

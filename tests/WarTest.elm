@@ -5,7 +5,7 @@ import Expect exposing (..)
 import List exposing (map, member)
 import Maybe exposing (withDefault)
 import Test exposing (..)
-import Tuple exposing (mapBoth)
+import Tuple exposing (first, mapBoth)
 import Types exposing (Card, Model, Player, Suit(..))
 import War exposing (..)
 
@@ -25,11 +25,14 @@ modelAfterTurnOne =
 
 
 generateFourTurns : Model -> ( List Model, Int -> Model )
-generateFourTurns modelZero =
+generateFourTurns model =
     let
         takeTurn : Model -> Model
         takeTurn m =
             update ClickedGo m |> Tuple.first
+
+        modelZero =
+            takeTurn model
 
         modelOne =
             takeTurn modelZero
@@ -143,13 +146,13 @@ testViews =
                             }
                 in
                 viewPlayers (getTurn 3)
-                    |> Expect.equal """🂠 4 (+4)
+                    |> Expect.equal """🂠 4 (-4)
 
  🂢 🂱 🃁 🃑
 
  🂧 🂱 🃁 🃑
 
-🂠 0 (-4)
+🂠 0 (+4)
 
 """
         , test "Both players play a new card every round." <|
@@ -233,13 +236,17 @@ testTakingTurns =
                                 )
                             }
                 in
-                Expect.all
-                    [ Expect.equal <| getACardFromPlayerZero (getTurn 0) 3
-                    , Expect.equal <| getACardFromPlayerZero (getTurn 1) 2
-                    , Expect.equal <| getACardFromPlayerZero (getTurn 2) 1
-                    , Expect.equal <| getACardFromPlayerZero (getTurn 3) 0
+                Expect.equal
+                    (first (getTurn 3).players).hand
+                    [ Card 1 Clubs
+                    , Card 0 Clubs
+                    , Card 1 Diamonds
+                    , Card 0 Diamonds
+                    , Card 1 Hearts
+                    , Card 0 Hearts
+                    , Card 1 Spades
+                    , Card 0 Spades
                     ]
-                    (Just (Card 1 Spades))
         , test "The player hand rotates once when you lose that turn." <|
             \_ ->
                 let
