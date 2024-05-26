@@ -121,23 +121,23 @@ update msg model =
                         ( newTopCards0, newTopCards1 ) =
                             -- TODO: null handling could be better
                             if
-                                (case List.tail player0.topCards of
+                                (case List.head player0.topCards of
                                     Nothing ->
                                         -1
 
-                                    Just headCards ->
-                                        List.map .rank headCards
+                                    Just headCard ->
+                                        headCard.rank
                                 )
                                     == (case List.head player1.topCards of
                                             Nothing ->
-                                                -1
+                                                -2
 
                                             Just headCard ->
                                                 headCard.rank
                                        )
                             then
-                                ( player0.topCards ++ [ c0 ]
-                                , player1.topCards ++ [ c1 ]
+                                ( [ c0 ] ++ player0.topCards
+                                , [ c1 ] ++ player1.topCards
                                 )
 
                             else
