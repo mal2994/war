@@ -48,7 +48,7 @@ createDeck =
 
 init : a -> ( Model, Cmd Msg )
 init _ =
-    if 0 == 1 then
+    if 1 == 1 then
         ( initialModel, initialCmd )
 
     else
