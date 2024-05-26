@@ -2,11 +2,11 @@ module WarTest exposing (..)
 
 import Array
 import Expect exposing (..)
-import List exposing (map, member)
+import List exposing (member)
 import Maybe exposing (withDefault)
 import Test exposing (..)
 import Tuple exposing (first, mapBoth)
-import Types exposing (Card, Model, Player, Suit(..))
+import Types exposing (Card, Model, Suit(..))
 import War exposing (..)
 
 
